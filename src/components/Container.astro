@@ -1,7 +1,24 @@
 ---
+import { SITE } from "@consts";
 
+interface Props {
+  section?: 'main' | 'footer';
+}
+
+const { section = 'main' } = Astro.props;
 ---
 
-<div class="mx-auto max-w-screen-sm px-5">
-  <slot />
+<div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="py-8">
+    {section === 'main' && (
+      <a href="/">
+        <img 
+          src="/tg-blognot.png" 
+          alt={SITE.TITLE}
+          class="w-full h-auto rounded-lg mb-8"
+        />
+      </a>
+    )}
+    <slot />
+  </div>
 </div>

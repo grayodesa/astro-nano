@@ -1,0 +1,109 @@
+---
+import { getCollection } from "astro:content";
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import Link from "@components/Link.astro";
+import { HOME } from "@consts";
+
+export async function getStaticPaths({ paginate }) {
+  const allPosts = await getCollection("posts");
+  const filteredPosts = await Promise.all(
+    allPosts
+      .filter(post => !post.data.draft)
+      .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+      .map(async (post) => {
+        const rendered = await post.render();
+        return { ...post, rendered };
+      })
+  );
+    
+  return paginate(filteredPosts, { 
+    pageSize: 10,
+    params: { page: (page) => page.toString() },
+    // Start from page 2
+    start: 2
+  });
+}
+
+const { page } = Astro.props;
+---
+
+<PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
+  <Container>
+    <section class="space-y-12">
+      {page.data.map(post => (
+        <article class="prose prose-slate max-w-none">
+        {/* Single image */}
+        {post.data.images?.length === 1 && (
+          <div class="single-image my-4">
+            <img 
+              src={`/${post.data.images[0]}`} 
+              alt={post.data.title}
+              class="rounded-lg max-w-full h-auto"
+            />
+          </div>
+        )}
+
+        {/* Multiple images */}
+        {post.data.images && post.data.images.length > 1 && (
+          <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+            {post.data.images.map((image) => (
+              <img 
+                src={`/${image}`} 
+                alt={post.data.title}
+                class="rounded-lg w-full h-64 object-cover"
+              />
+            ))}
+          </div>
+        )}
+          <div class="content">
+            <post.rendered.Content />
+          </div>
+          
+          <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
+            <a href={`/posts/${post.slug}`} class="hover:text-primary">
+              {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </a>
+            {post.data.source && (
+              <>
+                <span>/</span>
+                <a 
+                  href={post.data.source}
+                  class="hover:text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Source
+                </a>
+              </>
+            )}
+          </div>
+        </article>
+      ))}
+      
+      <nav class="flex justify-between items-center mt-8">
+        {page.url.prev ? (
+          <Link href={page.url.prev} class="hover:text-primary">
+            Previous
+          </Link>
+        ) : (
+          <span class="text-gray-400">Previous</span>
+        )}
+        {page.url.next ? (
+          <Link href={page.url.next} class="hover:text-primary">
+            Next
+          </Link>
+        ) : (
+          <span class="text-gray-400">Next</span>
+        )}
+      </nav>
+    </section>
+  </Container>
+</PageLayout>
+--- 
