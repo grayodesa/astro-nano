@@ -38,5 +38,10 @@
   },
   "devDependencies": {
     "astro-compress": "2.3.5"
-  }
+  },
+  "scripts": {
+      "build": "astro check && astro build",
+      "deploy": "pnpm install --frozen-lockfile && pnpm run build"
+    }
+  
 }

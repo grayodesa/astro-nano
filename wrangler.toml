@@ -1,9 +1,12 @@
-# Add this to your wrangler.toml
 [build]
-command = "npm run build"
-[build.upload]
-format = "service-worker"
+command = "pnpm install && pnpm run build"
+output = "dist"
 
-# Enable caching for node_modules
+[build.upload]
+format = "directory"
+
 [[build.caches]]
-paths = ["node_modules/**"]
+paths = [".pnpm-store/**"]
+
+[site]
+bucket = "./dist"
