@@ -43,84 +43,91 @@ const { page } = Astro.props as PageProps;
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <section class="space-y-12">
-      {page.data.map(post => (
-        <article class="prose prose-slate max-w-none">
-        {/* Single image */}
-        {post.data.images?.length === 1 && (
-          <div class="single-image my-4">
-            <img 
-              src={`/${post.data.images[0]}`} 
-              alt={post.data.title}
-              class="rounded-lg max-w-full h-auto cursor-pointer"
-              onclick="openModal(this.src)"
-            />
-          </div>
-        )}
-
-        {/* Multiple images */}
-        {post.data.images && post.data.images.length > 1 && (
-          <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image: string) => (
-              <img 
-                src={`/${image}`} 
-                alt={post.data.title}
-                class="rounded-lg w-full h-64 object-cover cursor-pointer"
-                onclick="openModal(this.src)"
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Modal for expanded images */}
-        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50" onclick="closeModal()">
-          <img id="modalImage" class="max-h-[90vh] max-w-[90vw] object-contain" src="" alt="Expanded view" />
-        </div>
-
-        <script is:inline>
-          function openModal(imgSrc) {
-            const modal = document.getElementById('imageModal');
-            const modalImg = document.getElementById('modalImage');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            modalImg.src = imgSrc;
-          }
-
-          function closeModal() {
-            const modal = document.getElementById('imageModal');
-            modal.classList.remove('flex');
-            modal.classList.add('hidden');
-          }
-        </script>
-
-          <div class="content">
-            <post.rendered.Content />
-          </div>
-          
-          <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
-            <a href={`/posts/${post.slug}`} class="hover:text-primary">
-              {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </a>
-            {post.data.source && (
-              <>
-                <span>/</span>
-                <a 
-                  href={post.data.source}
-                  class="hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Source
-                </a>
-              </>
+      {page.data.map((post, index) => (
+        <>
+          <article class="prose prose-slate max-w-none">
+            {/* Single image */}
+            {post.data.images?.length === 1 && (
+              <div class="single-image my-4">
+                <img 
+                  src={`/${post.data.images[0]}`} 
+                  alt={post.data.title}
+                  class="rounded-lg max-w-full h-auto cursor-pointer"
+                  onclick="openModal(this.src)"
+                />
+              </div>
             )}
-          </div>
-        </article>
+
+            {/* Multiple images */}
+            {post.data.images && post.data.images.length > 1 && (
+              <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
+                {post.data.images.map((image: string) => (
+                  <img 
+                    src={`/${image}`} 
+                    alt={post.data.title}
+                    class="rounded-lg w-full h-64 object-cover cursor-pointer"
+                    onclick="openModal(this.src)"
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Modal for expanded images */}
+            <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50" onclick="closeModal()">
+              <img id="modalImage" class="max-h-[90vh] max-w-[90vw] object-contain" src="" alt="Expanded view" />
+            </div>
+
+            <script is:inline>
+              function openModal(imgSrc) {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                modalImg.src = imgSrc;
+              }
+
+              function closeModal() {
+                const modal = document.getElementById('imageModal');
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+              }
+            </script>
+
+              <div class="content">
+                <post.rendered.Content />
+              </div>
+              
+              <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
+                <a href={`/posts/${post.slug}`} class="hover:text-primary">
+                  {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </a>
+                {post.data.source && (
+                  <>
+                    <span>/</span>
+                    <a 
+                      href={post.data.source}
+                      class="hover:text-primary"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Source
+                    </a>
+                  </>
+                )}
+              </div>
+          </article>
+          
+          {/* Add divider if not the last post */}
+          {index !== page.data.length - 1 && (
+            <hr class="border-gray-200 my-8" />
+          )}
+        </>
       ))}
       
       <nav class="flex justify-between items-center mt-8">

@@ -24,45 +24,52 @@ const totalPages = Math.ceil(totalPosts / 10);
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <section class="space-y-12">
-      {filteredPosts.map(post => (
-        <article class="prose prose-slate max-w-none">
-          {post.data.images && (
-            <img
-              src={post.data.images[0]}
-              alt={post.data.title || ''}
-              class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
-              onclick="openModal(this.src)"
-            />
-          )}
-          <div class="content">
-            <post.rendered.Content />
-          </div>
-          
-          <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
-            <a href={`/posts/${post.slug}`} class="hover:text-primary">
-              {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </a>
-            {post.data.source && (
-              <>
-                <span>/</span>
-                <a 
-                  href={post.data.source}
-                  class="hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Source
-                </a>
-              </>
+      {filteredPosts.map((post, index) => (
+        <>
+          <article class="prose prose-slate max-w-none">
+            {post.data.images && (
+              <img
+                src={post.data.images[0]}
+                alt={post.data.title || ''}
+                class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
+                onclick="openModal(this.src)"
+              />
             )}
-          </div>
-        </article>
+            <div class="content">
+              <post.rendered.Content />
+            </div>
+            
+            <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
+              <a href={`/posts/${post.slug}`} class="hover:text-primary">
+                {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </a>
+              {post.data.source && (
+                <>
+                  <span>/</span>
+                  <a 
+                    href={post.data.source}
+                    class="hover:text-primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                </>
+              )}
+            </div>
+          </article>
+
+          {/* Add divider if not the last post */}
+          {index !== filteredPosts.length - 1 && (
+            <hr class="border-gray-200 my-8" />
+          )}
+        </>
       ))}
       
       <nav class="flex justify-between items-center mt-8">

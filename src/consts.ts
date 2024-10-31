@@ -1,14 +1,14 @@
 import type { Site, Metadata, Socials } from "@types";
 
 export const SITE: Site = {
-  NAME: "Telegram Blognot",
+  NAME: "Телеграм-канал БлоГнот",
   EMAIL: "sergiy.petrenko@pm.me",
   NUM_POSTS_ON_HOMEPAGE: 10,
 };
 
 export const HOME: Metadata = {
   TITLE: "БлоGнот",
-  DESCRIPTION: "Your site description",
+  DESCRIPTION: "Архив публикаций телеграм-канала БлоГнот",
 };
 
 export const POSTS: Metadata = {
