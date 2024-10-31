@@ -2,7 +2,6 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
-import Link from "@components/Link.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -20,7 +19,9 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<PageLayout title={post.data.title} description={post.data.description}>
+<PageLayout 
+  title={post.data.title || ''} 
+  description={post.data.description || ''}>
   <Container>
     <article class="prose dark:prose-invert max-w-none">
       <div class="space-y-8">
@@ -64,7 +65,7 @@ const { Content } = await post.render();
         {/* Multiple images */}
         {post.data.images && post.data.images.length > 1 && (
           <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image) => (
+            {post.data.images.map((image: string) => (
               <img 
                 src={`/${image}`} 
                 alt={post.data.title}

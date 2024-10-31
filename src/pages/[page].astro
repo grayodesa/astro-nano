@@ -5,7 +5,7 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
 import { HOME } from "@consts";
 
-export async function getStaticPaths({ paginate }) {
+export async function getStaticPaths({ paginate }: { paginate: any }) {
   const allPosts = await getCollection("posts");
   const filteredPosts = await Promise.all(
     allPosts
@@ -19,13 +19,25 @@ export async function getStaticPaths({ paginate }) {
     
   return paginate(filteredPosts, { 
     pageSize: 10,
-    params: { page: (page) => page.toString() },
+    params: { page: (page: number) => page.toString() },
     // Start from page 2
     start: 2
   });
 }
 
-const { page } = Astro.props;
+// Define interface for the page prop
+interface PageProps {
+  page: {
+    data: any[];
+    url: {
+      prev: string | undefined;
+      next: string | undefined;
+    };
+  };
+}
+
+// Add type to the prop destructuring
+const { page } = Astro.props as PageProps;
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -47,7 +59,7 @@ const { page } = Astro.props;
         {/* Multiple images */}
         {post.data.images && post.data.images.length > 1 && (
           <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image) => (
+            {post.data.images.map((image: string) => (
               <img 
                 src={`/${image}`} 
                 alt={post.data.title}
