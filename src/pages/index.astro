@@ -28,7 +28,7 @@ const totalPages = Math.ceil(totalPosts / 10);
         <article class="prose prose-slate max-w-none">
           {post.data.images && (
             <img
-              src={post.data.images}
+              src={post.data.images[0]}
               alt={post.data.title || ''}
               class="rounded-lg w-full object-cover aspect-[2/1]"
             />
