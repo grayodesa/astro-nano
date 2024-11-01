@@ -1,14 +1,15 @@
-import { defineCollection, z } from "astro:content";
-import { image } from "astro:assets";
+import { defineCollection, z } from 'astro:content';
 
 const postsCollection = defineCollection({
-  type: "content",
   schema: ({ image }) => z.object({
     title: z.string().optional(),
-    description: z.string().optional(),
-    date: z.coerce.date(),
-    draft: z.boolean().optional(),
+    date: z.union([
+      z.date(),
+      z.string().transform((str) => new Date(str))
+    ]),
     source: z.string().optional(),
+    description: z.string().optional(),
+    draft: z.boolean().optional(),
     images: z.array(
       z.string()
         .transform((str) => {
@@ -18,7 +19,9 @@ const postsCollection = defineCollection({
         })
         .pipe(image())
     ).optional(),
-  }),
+  })
 });
 
-export const collections = { posts: postsCollection };
+export const collections = {
+  posts: postsCollection,
+};

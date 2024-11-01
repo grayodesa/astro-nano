@@ -64,10 +64,10 @@ const { page } = Astro.props as PageProps;
             {/* Multiple images */}
             {post.data.images && post.data.images.length > 1 && (
               <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                {post.data.images.map((image, idx) => (
+                {post.data.images.map((image: ImageMetadata, index: number) => (
                   <Image 
                     src={image}
-                    alt={post.data.imageAlts?.[idx] || `${post.data.title} - Image ${idx + 1}` || ''}
+                    alt={`${post.data.title || 'Blog post'} - Image ${index + 1}`}
                     width={400}
                     height={300}
                     class="rounded-lg w-full h-64 object-cover cursor-pointer"
