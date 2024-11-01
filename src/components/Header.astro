@@ -1,19 +1,15 @@
 ---
-import Container from "@components/Container.astro";
 import Link from "@components/Link.astro";
 import { SITE } from "@consts";
 ---
 
 <header>
-  <Container>
-  <div class="flex flex-wrap gap-y-2 justify-between">
-      <Link href="/" underline={false}>
-        <div class="font-semibold">
-          {SITE.NAME}
-        </div>
-      </Link>
-
-      </nav>
-    </div>  
-  </Container> 
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="py-8">
+      <a href="/">
+        <img src="/tg-blognot.avif" alt="Телеграм-канал БлоГнот" class="w-full h-auto rounded-lg">
+      </a>
+      <div class="flex flex-wrap gap-y-2 justify-between"></div>
+    </div>
+  </div>
 </header>
