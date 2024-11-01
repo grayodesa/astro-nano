@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -54,9 +55,11 @@ const { Content } = await post.render();
         {/* Single image */}
         {post.data.images?.length === 1 && (
           <div class="single-image my-4">
-            <img 
-              src={`/${post.data.images[0]}`} 
-              alt={post.data.title}
+            <Image 
+              src={post.data.images[0]}
+              alt={post.data.imageAlts?.[0] || post.data.title || ''}
+              width={800}
+              height={600}
               class="rounded-lg max-w-full h-auto cursor-pointer"
               onclick="openModal(this.src)"
             />
@@ -66,10 +69,12 @@ const { Content } = await post.render();
         {/* Multiple images */}
         {post.data.images && post.data.images.length > 1 && (
           <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image: string) => (
-              <img 
-                src={`/${image}`} 
-                alt={post.data.title}
+            {post.data.images.map((image, idx) => (
+              <Image 
+                src={image}
+                alt={post.data.imageAlts?.[idx] || `${post.data.title} - Image ${idx + 1}` || ''}
+                width={400}
+                height={300}
                 class="rounded-lg w-full h-64 object-cover cursor-pointer"
                 onclick="openModal(this.src)"
               />

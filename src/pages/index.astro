@@ -4,6 +4,7 @@ import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
 import { HOME } from "@consts";
+import { Image } from 'astro:assets';
 
 const allPosts = await getCollection("posts");
 const filteredPosts = await Promise.all(
@@ -28,9 +29,11 @@ const totalPages = Math.ceil(totalPosts / 10);
         <>
           <article class="prose prose-slate max-w-none">
             {post.data.images && (
-              <img
+              <Image
                 src={post.data.images[0]}
                 alt={post.data.title || ''}
+                width={800}
+                height={400}
                 class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
                 onclick="openModal(this.src)"
               />

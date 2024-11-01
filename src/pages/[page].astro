@@ -4,6 +4,7 @@ import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
 import { HOME } from "@consts";
+import { Image } from 'astro:assets';
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const allPosts = await getCollection("posts");
@@ -49,9 +50,11 @@ const { page } = Astro.props as PageProps;
             {/* Single image */}
             {post.data.images?.length === 1 && (
               <div class="single-image my-4">
-                <img 
-                  src={`/${post.data.images[0]}`} 
-                  alt={post.data.title}
+                <Image 
+                  src={post.data.images[0]}
+                  alt={post.data.imageAlts?.[0] || post.data.title || ''}
+                  width={800}
+                  height={600}
                   class="rounded-lg max-w-full h-auto cursor-pointer"
                   onclick="openModal(this.src)"
                 />
@@ -61,10 +64,12 @@ const { page } = Astro.props as PageProps;
             {/* Multiple images */}
             {post.data.images && post.data.images.length > 1 && (
               <div class="image-gallery my-4 grid grid-cols-2 md:grid-cols-3 gap-4">
-                {post.data.images.map((image: string) => (
-                  <img 
-                    src={`/${image}`} 
-                    alt={post.data.title}
+                {post.data.images.map((image, idx) => (
+                  <Image 
+                    src={image}
+                    alt={post.data.imageAlts?.[idx] || `${post.data.title} - Image ${idx + 1}` || ''}
+                    width={400}
+                    height={300}
                     class="rounded-lg w-full h-64 object-cover cursor-pointer"
                     onclick="openModal(this.src)"
                   />
@@ -102,7 +107,7 @@ const { page } = Astro.props as PageProps;
                   {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
                     year: 'numeric',
                     month: 'long',
-                    day: 'numeric',
+                    day: '2-digit',
                     hour: '2-digit',
                     minute: '2-digit'
                   })}
