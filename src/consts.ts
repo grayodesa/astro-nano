@@ -4,6 +4,7 @@ export const SITE: Site = {
   NAME: "Телеграм-канал БлоГнот",
   EMAIL: "sergiy.petrenko@pm.me",
   NUM_POSTS_ON_HOMEPAGE: 10,
+  URL: "https://tg.blognot.co",
 };
 
 export const HOME: Metadata = {
