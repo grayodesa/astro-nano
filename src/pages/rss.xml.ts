@@ -19,7 +19,7 @@ export async function GET() {
     items: items.map((item) => {
       const html = marked(item.body) as string;
       return {
-        title: item.data.title || 'Untitled',
+  //     title: item.data.title || 'Untitled',
         description: sanitizeHtml(html, {
           allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
           allowedAttributes: {
