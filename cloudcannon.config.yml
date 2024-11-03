@@ -1,6 +1,6 @@
 _schema: _schema
 paths:
-  uploads: public/uploads
+  uploads: public
   static: public
 collections_config:
   src_content_posts:
@@ -22,14 +22,6 @@ collections_config:
     path: ''
     name: Pages
     icon: wysiwyg
-    disable_url: true
-    disable_add: false
-    disable_add_folder: false
-    disable_file_actions: false
-  posts:
-    path: content/posts
-    name: Posts
-    icon: event_available
     disable_url: true
     disable_add: false
     disable_add_folder: false
