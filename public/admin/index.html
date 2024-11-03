@@ -11,6 +11,18 @@
         <!-- Include the script that builds the page and powers Decap CMS -->
         <script src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>
         <script>
+                  // Initialize the CMS with custom auth endpoint
+      window.CMS.init({
+        config: {
+          backend: {
+            name: 'github',
+            repo: 'grayodesa/astro-nano',
+            branch: 'main',
+            base_url: 'https://tg.blognot.co',
+            auth_endpoint: 'admin/auth'
+          }
+        }
+      });
             // Function to extract number from filename
             function extractNumber(filename) {
               const match = filename.match(/-(\d+)\.md$/);
