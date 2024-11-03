@@ -19,6 +19,10 @@ export default defineConfig({
   }),
   
   build: {
+    assets: 'assets',
+    client: 'client',
+    server: 'server',
+    serverEntry: 'entry.mjs',
     inlineStylesheets: 'auto',
     splitting: true,
     moduleCache: true
