@@ -19,14 +19,6 @@ collections_config:
     disable_add: false
     disable_add_folder: false
     disable_file_actions: false
-  pages:
-    path: ''
-    name: Pages
-    icon: wysiwyg
-    disable_url: true
-    disable_add: false
-    disable_add_folder: false
-    disable_file_actions: false
 timezone: Europe/Kiev
 markdown:
   engine: commonmark
