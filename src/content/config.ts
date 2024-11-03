@@ -7,6 +7,7 @@ const postsCollection = defineCollection({
       z.date(),
       z.string().transform((str) => new Date(str))
     ]),
+    url: z.string(),
     source: z.string().optional(),
     description: z.string().optional(),
     draft: z.boolean().optional(),
