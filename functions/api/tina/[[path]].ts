@@ -1,4 +1,4 @@
-eexport async function onRequest({ request, env }) {
+export async function onRequest({ request, env }) {
   try {
     const url = new URL(request.url);
     // Remove /api/tina from the pathname to get the actual API path
