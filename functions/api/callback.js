@@ -17,14 +17,9 @@ function renderBody(status, content) {
 
 export async function onRequest(context) {
     const { request, env } = context;
+    const client_id = 'Ov23liZ5TIua5TWCaTnr';
+    const client_secret = 'ca7aa3853da9389560c036f82cd5e30ec017464e';
 
-    // Validate environment variables
-    if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
-        return new Response('GitHub OAuth credentials are not configured', {
-            status: 500,
-            headers: { 'content-type': 'text/html;charset=UTF-8' },
-        });
-    }
 
     try {
         const url = new URL(request.url);
@@ -37,9 +32,6 @@ export async function onRequest(context) {
                 status: 400
             });
         }
-
-        const client_id = env.GITHUB_CLIENT_ID;
-        const client_secret = env.GITHUB_CLIENT_SECRET;
 
         const response = await fetch(
             'https://github.com/login/oauth/access_token',
