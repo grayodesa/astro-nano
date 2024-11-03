@@ -12,26 +12,35 @@ function renderBody(status, content) {
       window.opener.postMessage("authorizing:github", "*");
     </script>
     `;
-    const blob = new Blob([html]);
-    return blob;
+    return new Blob([html], { type: 'text/html' });
 }
 
 export async function onRequest(context) {
-    const {
-        request, // same as existing Worker API
-        env, // same as existing Worker API
-        params, // if filename includes [id] or [[path]]
-        waitUntil, // same as ctx.waitUntil in existing Worker API
-        next, // used for middleware or to fetch assets
-        data, // arbitrary space for passing data between middlewares
-    } = context;
+    const { request, env } = context;
 
-    const client_id = env.GITHUB_CLIENT_ID;
-    const client_secret = env.GITHUB_CLIENT_SECRET;
+    // Validate environment variables
+    if (!env.GITHUB_CLIENT_ID || !env.GITHUB_CLIENT_SECRET) {
+        return new Response('GitHub OAuth credentials are not configured', {
+            status: 500,
+            headers: { 'content-type': 'text/html;charset=UTF-8' },
+        });
+    }
 
     try {
         const url = new URL(request.url);
         const code = url.searchParams.get('code');
+        
+        // Validate code parameter
+        if (!code) {
+            return new Response(renderBody('error', { error: 'No code provided' }), {
+                headers: { 'content-type': 'text/html;charset=UTF-8' },
+                status: 400
+            });
+        }
+
+        const client_id = env.GITHUB_CLIENT_ID;
+        const client_secret = env.GITHUB_CLIENT_SECRET;
+
         const response = await fetch(
             'https://github.com/login/oauth/access_token',
             {
