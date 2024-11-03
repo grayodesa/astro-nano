@@ -2,7 +2,8 @@ backend:
   name: github
   repo: grayodesa/astro-nano
   branch: main
-  base_url: https://api.github.com
+  auth_endpoint: "admin/auth" # Add this line
+  site_domain: tg.blognot.co  # Add this line
 
 publish_mode: editorial_workflow
 
