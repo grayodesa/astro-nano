@@ -1,5 +1,5 @@
 import { defineConfig } from "tinacms";
-
+import { tinaEnv } from "./env";
 // Your hosting provider likely exposes this as an environment variable
 const branch =
   process.env.GITHUB_BRANCH ||
@@ -7,17 +7,13 @@ const branch =
   process.env.HEAD ||
   "main";
 
-  console.log('Client ID:', process.env.TINA_CLIENT_ID);
-  console.log('Token:', process.env.TINA_TOKEN);
+  console.log('Client ID:', tinaEnv.clientId);
+  console.log('Token:', tinaEnv.token);
 
 export default defineConfig({
+  clientId: tinaEnv.clientId,    // Use from tinaEnv
+  token: tinaEnv.token,     
   branch,
-
-  // Get this from tina.io
-  client: {
-    token: process.env.TINA_TOKEN,
-    clientId: process.env.TINA_CLIENT_ID
-  },
 
   build: {
     outputFolder: "admin",

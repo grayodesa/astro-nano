@@ -3,9 +3,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "build": "tinacms build && astro build",
     "deploy": "pnpm install --frozen-lockfile && pnpm run build",
-    "dev": "tinacms dev -c \"astro dev\"",
+    "build": "NODE_ENV=production tinacms build && astro build",
+    "dev": "NODE_ENV=development tinacms dev -c \"astro dev\"",
     "start": "astro start"
   },
   "dependencies": {
@@ -41,6 +41,7 @@
     "@tinacms/cli": "^1.6.11",
     "@types/node": "^22.8.6",
     "@types/sanitize-html": "^2.13.0",
-    "astro-compress": "2.3.5"
+    "astro-compress": "2.3.5",
+    "cross-env": "^7.0.3"
   }
 }
