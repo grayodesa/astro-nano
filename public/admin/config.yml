@@ -1,0 +1,48 @@
+backend:
+  name: github
+  repo: grayodesa/astro-nano
+  branch: main
+  base_url: https://api.github.com
+
+publish_mode: editorial_workflow
+
+media_folder: "src/assets"
+public_folder: "/assets"
+
+collections:
+  - name: "posts"
+    label: "Blog Posts"
+    folder: "src/content/posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{chunk}}"
+    fields:
+      - {
+          label: "Date",
+          name: "date",
+          widget: "datetime",
+          format: "YYYY-MM-DDTHH:mm:ss",
+          time_format: "HH:mm:ss"
+        }
+      - {
+          label: "Draft",
+          name: "draft",
+          widget: "boolean",
+          default: false
+        }
+      - {
+          label: "URL",
+          name: "url",
+          widget: "string",
+          pattern: ['^/[0-9]+$', "Must be in format /NUMBER"]
+        }
+      - {
+          label: "Source",
+          name: "source",
+          widget: "string",
+          required: false
+        }
+      - {
+          label: "Body",
+          name: "body",
+          widget: "markdown"
+        }

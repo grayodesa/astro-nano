@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager</title>
+    <link href="/admin/config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <body>
+        <!-- Include the script that builds the page and powers Decap CMS -->
+        <script src="https://unpkg.com/decap-cms@^3.1.2/dist/decap-cms.js"></script>
+        <script>
+            // Function to extract number from filename
+            function extractNumber(filename) {
+              const match = filename.match(/-(\d+)\.md$/);
+              return match ? parseInt(match[1]) : 0;
+            }
+      
+            // Register a custom preview template
+            CMS.registerPreviewTemplate('posts', {
+              async prepare(entry, collection) {
+                // Get all entries
+                const entries = await CMS.getEntries({
+                  folder: 'src/content/posts'
+                });
+                
+                // Find the highest number
+                const maxNumber = entries.reduce((max, entry) => {
+                  const num = extractNumber(entry.slug);
+                  return num > max ? num : max;
+                }, 5334); // Start from 5334 if no entries found
+                
+                // Set the new number
+                const newNumber = maxNumber + 1;
+                entry.data.chunk = newNumber;
+                
+                return entry;
+              }
+            });
+      
+          </script>
+      </body>
+  </body>
+</html>

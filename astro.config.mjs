@@ -13,13 +13,9 @@ export default defineConfig({
  
   ],
   postsPerPage: 15,
-  output: 'server',
-  adapter: node({
-    mode: "standalone"
-  }),
+  output: 'static',
   
   build: {
-    assets: 'assets',
     inlineStylesheets: 'auto',
     splitting: true,
     moduleCache: true

@@ -1,22 +1,34 @@
 export async function onRequest({ request, env }) {
-  try {
-    const url = new URL(request.url);
-    // Remove /api/tina from the pathname to get the actual API path
-    const apiPath = url.pathname.replace('/api/tina', '');
-    const tinaApiUrl = `https://content.tinajs.io${apiPath}${url.search}`;
-    
-    return fetch(tinaApiUrl, {
-      method: request.method,
+  const clientId = env.OAUTH_GITHUB_CLIENT_ID;
+  const clientSecret = env.OAUTH_GITHUB_CLIENT_SECRET;
+
+  // Handle OAuth requests
+  const url = new URL(request.url);
+  if (url.pathname === '/auth/github/callback') {
+    // Handle the OAuth callback
+    const code = url.searchParams.get('code');
+    // Exchange code for token
+    const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        client_id: clientId,
+        client_secret: clientSecret,
+        code: code,
+      }),
+    });
+
+    const data = await tokenResponse.json();
+    return new Response(JSON.stringify(data), {
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.TINA_TOKEN}`,
       },
-      body: request.body,
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
     });
   }
+
+  // Return 404 for other routes
+  return new Response('Not Found', { status: 404 });
 }
