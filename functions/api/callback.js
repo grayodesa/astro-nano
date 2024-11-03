@@ -17,13 +17,14 @@ function renderBody(status, content) {
 
 export async function onRequest(context) {
     const { request, env } = context;
-    const client_id = 'Ov23liZ5TIua5TWCaTnr';
-    const client_secret = 'ca7aa3853da9389560c036f82cd5e30ec017464e';
+
 
 
     try {
         const url = new URL(request.url);
         const code = url.searchParams.get('code');
+        const client_id = 'Ov23liZ5TIua5TWCaTnr';
+        const client_secret = 'ca7aa3853da9389560c036f82cd5e30ec017464e';
         
         // Validate code parameter
         if (!code) {
