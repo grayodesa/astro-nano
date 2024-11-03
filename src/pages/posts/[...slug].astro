@@ -5,8 +5,13 @@ import Container from "@components/Container.astro";
 import PageLayout from "@layouts/PageLayout.astro";
 import { Image } from 'astro:assets';
 
+export const prerender = true;
+
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
+  if (!posts.length) {
+    console.warn("No posts found in collection");
+  }
   return posts.map((post) => ({
     params: { slug: post.slug },
     props: { post },
