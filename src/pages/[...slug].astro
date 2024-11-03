@@ -13,7 +13,7 @@ export async function getStaticPaths() {
     console.warn("No posts found in collection");
   }
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.data.url.replace(/^\//, '') },
     props: { post },
   }));
 }
