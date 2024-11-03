@@ -3,7 +3,7 @@ backend:
   repo: grayodesa/astro-nano
   branch: main
   base_url: https://tg.blognot.co
-  auth_endpoint: admin/auth
+  auth_endpoint: /api/auth
 
 publish_mode: editorial_workflow
 
