@@ -8,14 +8,40 @@ import { Image } from 'astro:assets';
 export const prerender = true;
 
 export async function getStaticPaths() {
-  const posts = await getCollection("posts");
+  const posts = await getCollection("posts", (post) => {
+    return import.meta.env.PROD ? !post.data.draft : true;
+  });
+
   if (!posts.length) {
     console.warn("No posts found in collection");
   }
-  return posts.map((post) => ({
-    params: { slug: post.data.url.replace(/^\//, '') },
-    props: { post },
-  }));
+
+  // Sort posts by date
+  posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+  // Find the highest existing numeric URL
+  let lastId = Math.max(
+    0,
+    ...posts
+      .map(post => {
+        const match = post.data.url?.match(/\/(\d+)$/);
+        return match ? parseInt(match[1]) : 0;
+      })
+  );
+
+  return posts.map((post) => {
+    if (!post.data.url) {
+      lastId++;
+      post.data.url = `/${lastId}`;
+    }
+
+    return {
+      params: { 
+        slug: post.data.url.replace(/^\//, '')
+      },
+      props: { post },
+    };
+  });
 }
 
 type Props = {
