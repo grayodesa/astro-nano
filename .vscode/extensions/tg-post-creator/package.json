@@ -1,0 +1,22 @@
+{
+    "name": "tg-post-creator",
+    "displayName": "Telegram Post Creator",
+    "description": "Create new Telegram posts",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.60.0"
+    },
+    "categories": [
+        "Other"
+    ],
+    "activationEvents": [
+        "onCommand:tg-post-creator.createPost"
+    ],
+    "main": "./extension.js",
+    "contributes": {
+        "commands": [{
+            "command": "tg-post-creator.createPost",
+            "title": "Create New Telegram Post"
+        }]
+    }
+} 

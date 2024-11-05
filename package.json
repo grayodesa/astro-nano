@@ -6,7 +6,8 @@
     "deploy": "pnpm install --frozen-lockfile && pnpm run build",
     "build": "astro build",
     "dev": "astro dev",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "new-post": "node scripts/create-tg-post.js"
   },
   "dependencies": {
     "@astrojs/check": "^0.5.9",

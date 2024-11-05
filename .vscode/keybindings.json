@@ -1,0 +1,4 @@
+{
+    "key": "cmd+shift+t",
+    "command": "tg-post-creator.createPost"
+} 
