@@ -33,3 +33,4 @@ frontmatter.json
 .frontmatter/database/pinnedItemsDb.json
 .frontmatter/database/taxonomyDb.json
 .vscode/settings.json
+.aider*
