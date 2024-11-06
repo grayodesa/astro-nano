@@ -103,7 +103,7 @@ const { page } = Astro.props as PageProps;
               </div>
               
               <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
-                <a href={`/posts/post.data.url`} class="hover:text-primary">
+                <a href={post.data.url || `/posts/${post.slug}`} class="hover:text-primary">
                   {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
                     year: 'numeric',
                     month: 'long',

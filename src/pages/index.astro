@@ -7,13 +7,22 @@ import { HOME } from "@consts";
 import { Image } from 'astro:assets';
 
 const allPosts = await getCollection("posts");
-const filteredPosts = await Promise.all(
+const processedPosts = await Promise.all(
   allPosts
     .filter(post => !post.data.draft)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
     .slice(0, 10)  // First page
     .map(async (post) => {
       const rendered = await post.render();
+      if (post.data.images) {
+        const images = await Promise.all(
+          post.data.images.map(async (imagePath: string) => {
+            const imageModule = await import(`../assets/${imagePath}`);
+            return imageModule.default;
+          })
+        );
+        return { ...post, rendered, data: { ...post.data, images } };
+      }
       return { ...post, rendered };
     })
 );
@@ -25,54 +34,47 @@ const totalPages = Math.ceil(totalPosts / 10);
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <section class="space-y-12">
-      {filteredPosts.map((post, index) => (
-        <>
-          <article class="prose prose-slate max-w-none">
-            {post.data.images && (
-              <Image
-                src={post.data.images[0]}
-                alt={post.data.title || ''}
-                width={800}
-                height={400}
-                class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
-                onclick="openModal(this.src)"
-              />
-            )}
-            <div class="content">
-              <post.rendered.Content />
-            </div>
-            
-            <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
-              <a href={post.data.url} class="hover:text-primary">
-                {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit'
-                })}
-              </a>
-              {post.data.source && (
-                <>
-                  <span>/</span>
-                  <a 
-                    href={post.data.source}
-                    class="hover:text-primary"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Source
-                  </a>
-                </>
-              )}
-            </div>
-          </article>
-
-          {/* Add divider if not the last post */}
-          {index !== filteredPosts.length - 1 && (
-            <hr class="border-gray-200 my-8" />
+      {processedPosts.map(post => (
+        <article class="prose prose-slate max-w-none">
+          {post.data.images && (
+            <Image
+              src={post.data.images[0]}
+              alt={post.data.title || ''}
+              width={800}
+              height={400}
+              class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
+              onclick="openModal(this.src)"
+            />
           )}
-        </>
+          <div class="content">
+            <post.rendered.Content />
+          </div>
+          
+          <div class="text-sm text-gray-600 mt-4 flex gap-2 items-center">
+            <a href={post.data.url || `/posts/${post.slug}`} class="hover:text-primary">
+              {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+            </a>
+            {post.data.source && (
+              <>
+                <span>/</span>
+                <a 
+                  href={post.data.source}
+                  class="hover:text-primary"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Source
+                </a>
+              </>
+            )}
+          </div>
+        </article>
       ))}
       
       <nav class="flex justify-between items-center mt-8">

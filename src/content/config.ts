@@ -19,6 +19,7 @@ const postsCollection = defineCollection({
         })
         .pipe(image())
     ).optional(),
+    url: z.string().optional(),
   })
 });
 
