@@ -17,9 +17,19 @@
     "commands": [
       {
         "command": "commit-message-generator.generateMessage",
-        "title": "Generate Commit Message"
+        "title": "Generate Commit Message",
+        "icon": "$(sparkle)"
       }
     ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "commit-message-generator.generateMessage",
+          "group": "navigation",
+          "when": "scmProvider == git"
+        }
+      ]
+    },
     "configuration": {
       "title": "Commit Message Generator",
       "properties": {
