@@ -19,7 +19,17 @@
         "command": "commit-message-generator.generateMessage",
         "title": "Generate Commit Message"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Commit Message Generator",
+      "properties": {
+        "commitMessageGenerator.openaiApiKey": {
+          "type": "string",
+          "default": "",
+          "description": "Your OpenAI API key"
+        }
+      }
+    }
   },
   "dependencies": {
     "axios": "^1.6.0",

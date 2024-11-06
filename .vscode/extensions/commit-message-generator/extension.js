@@ -4,26 +4,42 @@ const { OpenAI } = require('openai');
 let openai;
 
 async function getGitDiff() {
-    const gitExtension = vscode.extensions.getExtension('vscode.git').exports;
-    const api = gitExtension.getAPI(1);
+    const gitExtension = vscode.extensions.getExtension('vscode.git');
+    if (!gitExtension) {
+        throw new Error('Git extension is not installed');
+    }
+
+    const api = gitExtension.exports.getAPI(1);
     const repo = api.repositories[0];
     
     if (!repo) {
         throw new Error('No git repository found');
     }
 
-    return await repo.diff(true);
+    const diff = await repo.diff(true);
+    if (!diff) {
+        throw new Error('No changes to commit');
+    }
+
+    return diff;
 }
 
 async function generateCommitMessage(diff) {
     if (!openai) {
-        const apiKey = await vscode.window.showInputBox({
-            prompt: 'Please enter your OpenAI API key',
-            password: true
-        });
+        const config = vscode.workspace.getConfiguration('commitMessageGenerator');
+        let apiKey = config.get('openaiApiKey');
         
         if (!apiKey) {
-            throw new Error('OpenAI API key is required');
+            apiKey = await vscode.window.showInputBox({
+                prompt: 'Please enter your OpenAI API key',
+                password: true
+            });
+            
+            if (!apiKey) {
+                throw new Error('OpenAI API key is required');
+            }
+            
+            await config.update('openaiApiKey', apiKey, true);
         }
         
         openai = new OpenAI({ apiKey });
@@ -34,15 +50,18 @@ async function generateCommitMessage(diff) {
         messages: [
             {
                 role: "system",
-                content: "You are a helpful assistant that generates concise and informative git commit messages. Focus on the what and why of the changes."
+                content: `You are a commit message generator that follows conventional commits format.
+                Always prefix commits with type (feat|fix|docs|style|refactor|test|chore) followed by optional scope.
+                Keep messages concise (<50 chars) and use imperative mood.
+                Focus on what changes accomplish, not what was done.`
             },
             {
                 role: "user",
-                content: `Generate a short, clear commit message for this diff:\n${diff}`
+                content: `Generate a conventional commit message for this diff:\n${diff}`
             }
         ],
         max_tokens: 60,
-        temperature: 0.7
+        temperature: 0.5
     });
 
     return response.choices[0].message.content.trim();
