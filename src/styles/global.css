@@ -83,3 +83,17 @@ html.scrolled #back-to-top {
 .reflection-effect {
   display: none;
 }
+
+.post-card {
+  @apply bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm;
+  @apply transition-all duration-300;
+  @apply hover:shadow-md hover:scale-[1.01];
+}
+
+.post-card .content {
+  @apply mt-6;
+}
+
+.post-card .metadata {
+  @apply border-t border-gray-200 dark:border-gray-700 pt-4 mt-6;
+}
