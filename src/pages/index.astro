@@ -7,22 +7,13 @@ import { HOME } from "@consts";
 import { Image } from 'astro:assets';
 
 const allPosts = await getCollection("posts");
-const processedPosts = await Promise.all(
+const filteredPosts = await Promise.all(
   allPosts
     .filter(post => !post.data.draft)
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
     .slice(0, 10)  // First page
     .map(async (post) => {
       const rendered = await post.render();
-      if (post.data.images) {
-        const images = await Promise.all(
-          post.data.images.map(async (imagePath: string) => {
-            const imageModule = await import(`../assets/${imagePath}`);
-            return imageModule.default;
-          })
-        );
-        return { ...post, rendered, data: { ...post.data, images } };
-      }
       return { ...post, rendered };
     })
 );
@@ -34,18 +25,38 @@ const totalPages = Math.ceil(totalPosts / 10);
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
   <Container>
     <section class="space-y-12">
-      {processedPosts.map(post => (
+      {filteredPosts.map((post, index) => (
         <article class="post-card prose prose-slate max-w-none">
-          {post.data.images && (
-            <Image
-              src={post.data.images[0]}
-              alt={post.data.title || ''}
-              width={800}
-              height={400}
-              class="rounded-lg w-full object-cover aspect-[2/1] cursor-pointer"
-              onclick="openModal(this.src)"
-            />
+          {/* Single image */}
+          {post.data.images?.length === 1 && (
+            <div class="single-image mb-6">
+              <Image 
+                src={post.data.images[0]}
+                alt={post.data.imageAlts?.[0] || post.data.title || ''}
+                width={800}
+                height={600}
+                class="rounded-lg max-w-full h-auto cursor-pointer"
+                onclick={`openModal('${post.data.images[0].src}')`}
+              />
+            </div>
           )}
+
+          {/* Multiple images */}
+          {post.data.images && post.data.images.length > 1 && (
+            <div class="image-gallery mb-6 grid grid-cols-2 md:grid-cols-3 gap-4">
+              {post.data.images.map((image: ImageMetadata, index: number) => (
+                <Image 
+                  src={image}
+                  alt={`${post.data.title || 'Blog post'} - Image ${index + 1}`}
+                  width={400}
+                  height={300}
+                  class="rounded-lg w-full h-64 object-cover cursor-pointer"
+                  onclick={`openModal('${image.src}')`}
+                />
+              ))}
+            </div>
+          )}
+
           <div class="content">
             <post.rendered.Content />
           </div>
@@ -55,7 +66,7 @@ const totalPages = Math.ceil(totalPosts / 10);
               {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
                 year: 'numeric',
                 month: 'long',
-                day: 'numeric',
+                day: '2-digit',
                 hour: '2-digit',
                 minute: '2-digit'
               })}
@@ -103,7 +114,8 @@ const totalPages = Math.ceil(totalPosts / 10);
         const modalImg = document.getElementById('modalImage');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        modalImg.src = imgSrc;
+        const fullSizeUrl = imgSrc.split('?')[0];
+        modalImg.src = fullSizeUrl;
       }
 
       function closeModal() {

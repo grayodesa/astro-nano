@@ -55,7 +55,7 @@ const { page } = Astro.props as PageProps;
                 width={800}
                 height={600}
                 class="rounded-lg max-w-full h-auto cursor-pointer"
-                onclick="openModal(this.src)"
+                onclick={`openModal('${post.data.images[0].src}')`}
               />
             </div>
           )}
@@ -70,7 +70,7 @@ const { page } = Astro.props as PageProps;
                   width={400}
                   height={300}
                   class="rounded-lg w-full h-64 object-cover cursor-pointer"
-                  onclick="openModal(this.src)"
+                  onclick={`openModal('${image.src}')`}
                 />
               ))}
             </div>
@@ -125,5 +125,26 @@ const { page } = Astro.props as PageProps;
       </nav>
     </section>
   </Container>
+
+  <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50" onclick="closeModal()">
+    <img id="modalImage" class="max-h-[90vh] max-w-[90vw] object-contain" src="" alt="Expanded view" />
+  </div>
+
+  <script is:inline>
+    function openModal(imgSrc) {
+      const modal = document.getElementById('imageModal');
+      const modalImg = document.getElementById('modalImage');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      const fullSizeUrl = imgSrc.split('?')[0];
+      modalImg.src = fullSizeUrl;
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('flex');
+      modal.classList.add('hidden');
+    }
+  </script>
 </PageLayout>
 --- 

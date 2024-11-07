@@ -63,7 +63,7 @@ const { Content } = await post.render();
               width={800}
               height={600}
               class="rounded-lg max-w-full h-auto cursor-pointer"
-              onclick="openModal(this.src)"
+              onclick={`openModal('${post.data.images[0].src}')`}
             />
           </div>
         )}
@@ -71,14 +71,14 @@ const { Content } = await post.render();
         {/* Multiple images */}
         {post.data.images && post.data.images.length > 1 && (
           <div class="image-gallery grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image: string) => (
+            {post.data.images.map((image: ImageMetadata) => (
               <Image 
                 src={image}
                 alt={post.data.title || ''}
                 width={400}
                 height={300}
                 class="rounded-lg w-full h-64 object-cover cursor-pointer"
-                onclick="openModal(this.src)"
+                onclick={`openModal('${image.src}')`}
               />
             ))}
           </div>
@@ -101,7 +101,8 @@ const { Content } = await post.render();
         const modalImg = document.getElementById('modalImage');
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-        modalImg.src = imgSrc;
+        const fullSizeUrl = imgSrc.split('?')[0];
+        modalImg.src = fullSizeUrl;
       }
 
       function closeModal() {
