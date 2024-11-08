@@ -1,36 +1,54 @@
 ---
-const GA_ID = import.meta.env.PUBLIC_GA_ID; // Make sure to add this to your .env file
+const GA_ID = import.meta.env.PUBLIC_GA_ID;
 ---
 
 {GA_ID && (
   <Fragment>
+    {/* Preconnect to Google Analytics domain */}
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    
+    {/* Defer GA script loading */}
     <script type="module" define:vars={{ GA_ID }}>
-      // Create script element with modern analytics
-      const script = document.createElement('script');
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
-      script.async = true;
-      document.head.appendChild(script);
+      // Defer GA initialization
+      function loadGA() {
+        // Initialize dataLayer
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        
+        // Create and load GA script
+        const script = document.createElement('script');
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_ID}`;
+        script.async = true;
+        document.head.appendChild(script);
 
-      // Initialize dataLayer and gtag function
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-      gtag('config', GA_ID, {
-        send_page_view: false, // We'll handle this manually
-        anonymize_ip: true,
-        cookie_flags: 'SameSite=None;Secure'
-      });
+        // Initialize GA after script loads
+        script.onload = () => {
+          gtag('js', new Date());
+          gtag('config', GA_ID, {
+            send_page_view: false,
+            anonymize_ip: true,
+            cookie_flags: 'SameSite=None;Secure'
+          });
+        };
 
-      // Handle page views with performance tracking
-      document.addEventListener('astro:page-load', () => {
-        gtag('event', 'page_view', {
-          page_title: document.title,
-          page_location: window.location.href,
-          page_path: window.location.pathname
+        // Handle page views
+        document.addEventListener('astro:page-load', () => {
+          gtag('event', 'page_view', {
+            page_title: document.title,
+            page_location: window.location.href,
+            page_path: window.location.pathname
+          });
         });
-      });
+      }
+
+      // Load GA after page is fully loaded
+      if (document.readyState === 'complete') {
+        loadGA();
+      } else {
+        window.addEventListener('load', loadGA);
+      }
     </script>
   </Fragment>
 )} 
