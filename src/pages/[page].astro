@@ -5,6 +5,7 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
 import { HOME } from "@consts";
 import { Image } from 'astro:assets';
+import CommentCount from '../components/CommentCount.astro';
 
 export async function getStaticPaths({ paginate }: { paginate: any }) {
   const allPosts = await getCollection("posts");
@@ -92,7 +93,7 @@ const { page } = Astro.props as PageProps;
             </a>
             {post.data.source && (
               <>
-                <span>/</span>
+                <span>•</span>
                 <a 
                   href={post.data.source}
                   class="hover:text-primary"
@@ -103,6 +104,8 @@ const { page } = Astro.props as PageProps;
                 </a>
               </>
             )}
+            <span>•</span>
+            <CommentCount path={post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`} />
           </div>
         </article>
       ))}
