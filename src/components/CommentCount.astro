@@ -23,13 +23,11 @@ const { path } = Astro.props;
 
     try {
       const response = await fetch(
-        `https://giscus.app/api/discussions?repo=grayodesa/tg-comments&term=${encodeURIComponent(path)}`,
+        `/api/giscus?term=${encodeURIComponent(path)}`,
         {
           headers: {
             'Accept': 'application/json'
-          },
-          mode: 'cors',
-          credentials: 'omit'
+          }
         }
       );
 
@@ -44,7 +42,6 @@ const { path } = Astro.props;
       }
     } catch (error) {
       console.error('Error fetching comment count:', error);
-      // Keep the initial "0" value on error
     }
   }
 
@@ -53,10 +50,7 @@ const { path } = Astro.props;
     elements.forEach(fetchCommentCount);
   }
 
-  // Initialize on both events to ensure it works in all scenarios
   document.addEventListener('astro:page-load', initCommentCounts);
   document.addEventListener('DOMContentLoaded', initCommentCounts);
-
-  // Initial load for View Transitions
   initCommentCounts();
 </script> 
