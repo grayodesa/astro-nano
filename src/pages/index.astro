@@ -70,33 +70,30 @@ const commentCounts = await Promise.all(
             <post.rendered.Content />
           </div>
           
-          <div class="metadata text-sm text-gray-600 flex gap-2 items-center">
-            <a href={post.data.url || `/posts/${post.slug}`} class="hover:text-primary">
-              {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
-                year: 'numeric',
-                month: 'long',
-                day: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-            </a>
-            {post.data.source && (
-              <>
-                <span>/</span>
-                <a 
-                  href={post.data.source}
-                  class="hover:text-primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Source
-                </a>
-              </>
-            )}
-            <div class="flex items-center gap-x-3 text-sm text-gray-500 dark:text-gray-400">
-              <time datetime={post.data.date.toISOString()}>
-                {post.data.date.toLocaleDateString()}
-              </time>
+          <div class="metadata text-sm text-gray-600">
+            <div class="flex items-center gap-x-3 text-gray-500 dark:text-gray-400">
+              <a href={post.data.url || `/posts/${post.slug}`} class="hover:text-primary">
+                {post.data.date && new Date(post.data.date).toLocaleDateString('ru', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </a>
+              {post.data.source && (
+                <>
+                  <span>•</span>
+                  <a 
+                    href={post.data.source}
+                    class="hover:text-primary"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Source
+                  </a>
+                </>
+              )}
               <span>•</span>
               <CommentCount path={post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`} />
             </div>

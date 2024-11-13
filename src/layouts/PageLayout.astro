@@ -26,4 +26,31 @@ const { title, description } = Astro.props;
     </main>
     <Footer />
   </body>
+  <script is:inline>
+    // Reinitialize giscus on client-side navigation
+    document.addEventListener('astro:page-load', () => {
+      const giscusScript = document.querySelector('script[src*="giscus.app"]');
+      if (giscusScript) {
+        giscusScript.remove();
+        const newScript = document.createElement('script');
+        // Copy all attributes from the giscus script snippet
+        newScript.src = "https://giscus.app/client.js";
+        newScript.setAttribute("data-repo", "grayodesa/tg-comments");
+        newScript.setAttribute("data-repo-id", "R_kgDONOyFGw");
+        newScript.setAttribute("data-category", "General");
+        newScript.setAttribute("data-category-id", "DIC_kwDONOyFG84CkO-Q");
+        newScript.setAttribute("data-mapping", "pathname");
+        newScript.setAttribute("data-strict", "0");
+        newScript.setAttribute("data-reactions-enabled", "1");
+        newScript.setAttribute("data-emit-metadata", "0");
+        newScript.setAttribute("data-input-position", "bottom");
+        newScript.setAttribute("data-theme", "light");
+        newScript.setAttribute("data-lang", "uk");
+        newScript.setAttribute("data-loading", "lazy");
+        newScript.setAttribute("crossorigin", "anonymous");
+        newScript.async = true;
+        document.body.appendChild(newScript);
+      }
+    });
+  </script>
 </html>

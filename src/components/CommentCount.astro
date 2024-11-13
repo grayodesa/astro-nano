@@ -13,34 +13,40 @@ const { path } = Astro.props;
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4">
     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
   </svg>
-  <span class="count">...</span>
+  <span class="count">0</span>
 </span>
 
 <script>
-  async function fetchCommentCounts() {
-    const elements = document.querySelectorAll('.comment-count');
-    
-    elements.forEach(async (element) => {
-      const path = element.getAttribute('data-path');
-      if (!path) return;
+  // Create a function to fetch a single comment count
+  async function fetchCommentCount(element: Element) {
+    const path = element.getAttribute('data-path');
+    if (!path) return;
 
-      try {
-        const response = await fetch(
-          `https://giscus.app/api/discussions?repo=grayodesa/tg-comments&term=${path}&strict=0`
-        );
-        const data = await response.json();
-        const count = data.discussion?.totalCommentCount || 0;
-        
-        const countElement = element.querySelector('.count');
-        if (countElement) {
-          countElement.textContent = count.toString();
-        }
-      } catch (error) {
-        console.error('Error fetching comment count:', error);
+    try {
+      const response = await fetch(
+        `https://giscus.app/api/discussions?repo=grayodesa/tg-comments&term=${path}&strict=0`
+      );
+      const data = await response.json();
+      const count = data.discussion?.totalCommentCount || 0;
+      
+      const countElement = element.querySelector('.count');
+      if (countElement) {
+        countElement.textContent = count.toString();
       }
-    });
+    } catch (error) {
+      console.error('Error fetching comment count:', error);
+    }
   }
 
-  // Fetch counts when the component mounts
-  fetchCommentCounts();
+  // Function to initialize comment counts
+  function initCommentCounts() {
+    const elements = document.querySelectorAll('.comment-count');
+    elements.forEach(fetchCommentCount);
+  }
+
+  // Call on page load
+  document.addEventListener('DOMContentLoaded', initCommentCounts);
+
+  // Also call when the script loads (for client navigation)
+  initCommentCounts();
 </script> 
