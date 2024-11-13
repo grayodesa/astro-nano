@@ -87,6 +87,27 @@ const { Content } = await post.render();
         <div class="content">
           <Content />
         </div>
+
+        {/* Comments section */}
+        <div class="mt-16">
+          <script
+            src="https://giscus.app/client.js"
+            data-repo="grayodesa/tg-comments"
+            data-repo-id="R_kgDONOyFGw"
+            data-category="General"
+            data-category-id="DIC_kwDONOyFG84CkO-Q"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="light"
+            data-lang="uk"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async
+          ></script>
+        </div>
       </div>
     </article>
 
@@ -110,6 +131,27 @@ const { Content } = await post.render();
         modal.classList.remove('flex');
         modal.classList.add('hidden');
       }
+
+      // Add theme switching support for giscus
+      function updateGiscusTheme() {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        
+        const theme = document.documentElement.classList.contains('dark') 
+          ? 'dark_high_contrast'
+          : 'light_high_contrast';
+          
+        iframe.contentWindow.postMessage(
+          { giscus: { setConfig: { theme } } },
+          'https://giscus.app'
+        );
+      }
+
+      // Update theme when system preference changes
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateGiscusTheme);
+      
+      // Initial theme setup
+      document.addEventListener('DOMContentLoaded', updateGiscusTheme);
     </script>
   </Container>
 </PageLayout>

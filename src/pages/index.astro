@@ -5,6 +5,8 @@ import PageLayout from "@layouts/PageLayout.astro";
 import Link from "@components/Link.astro";
 import { HOME } from "@consts";
 import { Image } from 'astro:assets';
+import { getCommentCount } from '../utils/giscus';
+import CommentCount from '../components/CommentCount.astro';
 
 const allPosts = await getCollection("posts");
 const filteredPosts = await Promise.all(
@@ -20,6 +22,13 @@ const filteredPosts = await Promise.all(
 
 const totalPosts = allPosts.filter(post => !post.data.draft).length;
 const totalPages = Math.ceil(totalPosts / 10);
+
+const commentCounts = await Promise.all(
+  filteredPosts.map(post => {
+    const path = post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`;
+    return getCommentCount(path);
+  })
+);
 ---
 
 <PageLayout title={HOME.TITLE} description={HOME.DESCRIPTION}>
@@ -84,6 +93,13 @@ const totalPages = Math.ceil(totalPosts / 10);
                 </a>
               </>
             )}
+            <div class="flex items-center gap-x-3 text-sm text-gray-500 dark:text-gray-400">
+              <time datetime={post.data.date.toISOString()}>
+                {post.data.date.toLocaleDateString()}
+              </time>
+              <span>•</span>
+              <CommentCount path={post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`} />
+            </div>
           </div>
         </article>
       ))}
