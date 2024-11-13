@@ -95,7 +95,9 @@ const commentCounts = await Promise.all(
                 </>
               )}
               <span>•</span>
-              <CommentCount path={post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`} />
+              <a href={post.data.url || `/posts/${post.slug}`} class="hover:text-primary">
+                <CommentCount path={post.data.url?.replace(/^\/|\/$/g, '') || `posts/${post.slug}`} />
+              </a>
             </div>
           </div>
         </article>
