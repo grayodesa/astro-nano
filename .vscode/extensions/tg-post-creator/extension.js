@@ -18,6 +18,25 @@ async function getLastPostId(postsDir) {
     }
 }
 
+async function processText(text) {
+    // Split into lines and remove empty lines from the end
+    const lines = text.trim().split('\n');
+    let source = '';
+    let content = text;
+
+    // Check if the last line is a URL
+    const lastLine = lines[lines.length - 1];
+    const urlRegex = /^https?:\/\/[^\s]+$/;
+    
+    if (urlRegex.test(lastLine)) {
+        source = lastLine;
+        // Remove the last line (URL) from content
+        content = lines.slice(0, -1).join('\n').trim();
+    }
+
+    return { content, source };
+}
+
 async function activate(context) {
     let disposable = vscode.commands.registerCommand('tg-post-creator.createPost', async () => {
         const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -32,6 +51,10 @@ async function activate(context) {
             const lastId = await getLastPostId(POSTS_DIR);
             const newId = lastId + 1;
             
+            // Get clipboard content
+            const clipboardText = await vscode.env.clipboard.readText();
+            const { content: processedContent, source } = await processText(clipboardText);
+            
             const now = new Date();
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -41,20 +64,21 @@ async function activate(context) {
             const second = String(now.getSeconds()).padStart(2, '0');
             
             const filename = `${year}-${month}-${day}-${newId}.md`;
-            const content = `---
+            const fileContent = `---
 date: "${year}-${month}-${day}T${hour}:${minute}:${second}"
 draft: false
 url: "/${newId}"
+source: "${source}"
 images: 
     - 
-source: ""
 forwarded_from: ""
 ---
 
+${processedContent}
 `;
             await fs.mkdir(POSTS_DIR, { recursive: true });
             const filePath = path.join(POSTS_DIR, filename);
-            await fs.writeFile(filePath, content);
+            await fs.writeFile(filePath, fileContent);
 
             // Open the new file
             const document = await vscode.workspace.openTextDocument(filePath);
