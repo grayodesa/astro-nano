@@ -18,6 +18,11 @@ export async function GET() {
     site: SITE.URL,
     items: items.map((item) => {
       const html = marked(item.body) as string;
+      const date = new Date(item.data.date);
+      
+      // Subtract 2 hours to convert from UTC+2 to UTC
+      const utcDate = new Date(date.getTime() - 2 * 60 * 60 * 1000);
+      
       return {
   //     title: item.data.title || 'Untitled',
         description: sanitizeHtml(html, {
@@ -27,7 +32,7 @@ export async function GET() {
             img: ['src', 'alt']
           }
         }),
-        pubDate: item.data.date,
+        pubDate: utcDate,
         link: `${SITE.URL}/${item.collection}/${item.slug}/`,
         source: item.data.source ? {
           title: item.data.source,
