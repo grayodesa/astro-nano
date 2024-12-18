@@ -29,6 +29,10 @@ export async function GET() {
         }),
         pubDate: item.data.date,
         link: `${SITE.URL}/${item.collection}/${item.slug}/`,
+        source: item.data.source ? {
+          title: item.data.source,
+          url: item.data.source
+        } : undefined,
       };
     }),
   });
