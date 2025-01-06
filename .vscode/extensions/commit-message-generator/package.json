@@ -9,9 +9,6 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [
-    "onCommand:commit-message-generator.generateMessage"
-  ],
   "main": "./extension.js",
   "contributes": {
     "commands": [
