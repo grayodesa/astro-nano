@@ -30,3 +30,4 @@ frontmatter.json
 .frontmatter/database/taxonomyDb.json
 .vscode/settings.json
 .aider*
+.vscode/extensions/*
