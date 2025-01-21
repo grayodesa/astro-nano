@@ -31,3 +31,4 @@ frontmatter.json
 .vscode/settings.json
 .aider*
 .vscode/extensions/*
+.vscode/extensions/tg-post-creator/extension.js
