@@ -22,10 +22,6 @@ node_modules
 
 tina/__generated__/*
 frontmatter.json
-.frontmatter/database/mediaDb.json
-.frontmatter/database/pinnedItemsDb.json
-.frontmatter/database/taxonomyDb.json
-.vscode/settings.json
+.frontmatter/
 .aider*
-.vscode/extensions/*
-.vscode/extensions/tg-post-creator/extension.js
+.vscode/
