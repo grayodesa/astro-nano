@@ -25,3 +25,4 @@ frontmatter.json
 .frontmatter/
 .aider*
 .vscode/
+.zed/
