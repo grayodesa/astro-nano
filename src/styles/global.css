@@ -60,7 +60,15 @@ article {
   article a:hover {
     @apply text-black dark:text-white;
     @apply decoration-black/25 dark:decoration-white/50;
+    transform: none !important;
   }
+}
+
+/* Disable magnification effect on tooltips */
+[tooltip], [trigger="hover"] {
+  transform: none !important;
+  transition: none !important;
+  scale: none !important;
 }
 
 .animate {
@@ -87,7 +95,7 @@ html.scrolled #back-to-top {
 .post-card {
   @apply bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm;
   @apply transition-all duration-300;
-  @apply hover:shadow-md hover:scale-[1.01];
+  @apply hover:shadow-md hover:scale-100;
 }
 
 .post-card .content {
