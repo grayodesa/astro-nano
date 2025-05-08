@@ -3,6 +3,7 @@ export interface Site {
   EMAIL: string;
   NUM_POSTS_ON_HOMEPAGE: number;
   URL: string;
+  AUTHOR?: string;
 }
 
 export type Metadata = {

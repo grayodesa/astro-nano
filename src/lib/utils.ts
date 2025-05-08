@@ -38,3 +38,34 @@ export function dateRange(startDate: Date, endDate?: Date | string): string {
 
   return `${startMonth}${startYear} - ${endMonth}${endYear}`;
 }
+
+/**
+ * Extract an excerpt from HTML content
+ * @param html HTML content to extract excerpt from
+ * @param maxLength Maximum length of excerpt (default: 160 characters)
+ * @returns Extracted excerpt as plain text
+ */
+export function getExcerpt(html: string, maxLength: number = 160): string {
+  // Remove HTML tags
+  const textOnly = html.replace(/<[^>]+>/g, "");
+  
+  // Remove extra whitespace
+  const cleanText = textOnly.replace(/\s+/g, " ").trim();
+  
+  // If text is shorter than maxLength, return it as is
+  if (cleanText.length <= maxLength) {
+    return cleanText;
+  }
+  
+  // Otherwise, truncate at the last space before maxLength
+  const truncated = cleanText.substring(0, maxLength);
+  const lastSpaceIndex = truncated.lastIndexOf(" ");
+  
+  // If no space found, just return the truncated text
+  if (lastSpaceIndex === -1) {
+    return truncated + "...";
+  }
+  
+  // Return text truncated at the last space
+  return truncated.substring(0, lastSpaceIndex) + "...";
+}
