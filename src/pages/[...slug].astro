@@ -29,7 +29,7 @@ const { Content } = await post.render();
 const excerpt = post.data.description || getExcerpt(post.body);
 
 // Determine the image to use for OpenGraph
-const ogImage = post.data.images && post.data.images.length > 0 
+const ogImage = post.data.images && Array.isArray(post.data.images) && post.data.images.length > 0 
   ? post.data.images[0].src 
   : undefined;
 ---
@@ -52,7 +52,7 @@ const ogImage = post.data.images && post.data.images.length > 0
               day: "numeric",
             })}
           </time>
-          {post.data.source && (
+          {post.data.source && post.data.source.trim() !== '' && (
             <>
               <span>/</span>
               <a 
@@ -68,7 +68,7 @@ const ogImage = post.data.images && post.data.images.length > 0
         </div>
 
         {/* Single image */}
-        {post.data.images?.length === 1 && (
+        {post.data.images && Array.isArray(post.data.images) && post.data.images.length === 1 && post.data.images[0] && (
           <div class="single-image">
             <Image 
               src={post.data.images[0]}
@@ -82,9 +82,9 @@ const ogImage = post.data.images && post.data.images.length > 0
         )}
 
         {/* Multiple images */}
-        {post.data.images && post.data.images.length > 1 && (
+        {post.data.images && Array.isArray(post.data.images) && post.data.images.length > 1 && (
           <div class="image-gallery grid grid-cols-2 md:grid-cols-3 gap-4">
-            {post.data.images.map((image: ImageMetadata) => (
+            {post.data.images.filter(image => image).map((image: ImageMetadata) => (
               <Image 
                 src={image}
                 alt={post.data.title || ''}
