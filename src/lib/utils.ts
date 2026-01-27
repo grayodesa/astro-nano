@@ -45,7 +45,9 @@ export function dateRange(startDate: Date, endDate?: Date | string): string {
  * @param maxLength Maximum length of excerpt (default: 160 characters)
  * @returns Extracted excerpt as plain text
  */
-export function getExcerpt(html: string, maxLength: number = 160): string {
+export function getExcerpt(html: string | undefined | null, maxLength: number = 160): string {
+  if (!html) return '';
+
   // Remove HTML tags
   const textOnly = html.replace(/<[^>]+>/g, "");
   
